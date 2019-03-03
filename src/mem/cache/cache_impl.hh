@@ -344,9 +344,10 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
 
 
     //sxj
+    std::string cacheName(name());
     //printf("packet's size = %d\n", pkt->getSize());
     packetSize.sample(pkt->getSize());
-    if (blk && (name() != "system.l2")){//这里的cycle数量变化在所有的cache中均考虑了
+    if (blk && ((cacheName.find("dcache") != std::string::npos) || (cacheName.find("icache") != std::string::npos)) ) {//这里的cycle数量变化在所有的cache中均考虑了
         if (pkt->isRead()){
             if (!blk->isWeak){
                 readHitsStrong++;
@@ -368,7 +369,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     }
     //这里检测是否要进行swap，先检测accessBlk是否命中，命中后检测操作为读还是写
     
-    if (blk && (name() != "system.l2") ) {//hit
+    if (blk && ((cacheName.find("dcache") != std::string::npos) || (cacheName.find("icache") != std::string::npos)) ) {//hit
         /*printf("come from ");
         if (name() == "system.cpu.dcache")
             printf("D cache\n");
