@@ -346,7 +346,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     //sxj
     //printf("packet's size = %d\n", pkt->getSize());
     packetSize.sample(pkt->getSize());
-    if (blk && (name() ！= "system.l2"){//这里的cycle数量变化在所有的cache中均考虑了
+    if (blk && (name() ！= "system.l2")){//这里的cycle数量变化在所有的cache中均考虑了
         if (pkt->isRead()){
             if (!blk->isWeak){
                 readHitsStrong++;
