@@ -618,50 +618,50 @@ Cache::recvTimingReq(PacketPtr pkt)
 
         //sxj
 
-        unsigned int addr_block = blockAlign(pkt->getAddr());   
-        bool foundIt = false;
-        int setIdx = tags->extractSet(pkt->getAddr());          //首先获得pkt对应的block地址以及tag地址
-        std::list<std::pair<unsigned int, unsigned int> >::iterator Pws;
-        if (wsRecord.find(setIdx) != wsRecord.end()){                   //这里的wsRecord是base.hh中的成员，先找到set
+        // unsigned int addr_block = blockAlign(pkt->getAddr());   
+        // bool foundIt = false;
+        // int setIdx = tags->extractSet(pkt->getAddr());          //首先获得pkt对应的block地址以及tag地址
+        // std::list<std::pair<unsigned int, unsigned int> >::iterator Pws;
+        // if (wsRecord.find(setIdx) != wsRecord.end()){                   //这里的wsRecord是base.hh中的成员，先找到set
 
-            for (Pws = wsRecord[setIdx].begin(); Pws != wsRecord[setIdx].end(); Pws++){
-                if (Pws->first == addr_block){                          //如果是read，就出栈，sample；如果是write，就+1
-                    foundIt = true;
-                    if(pkt->isWrite()){
-                        (Pws->second)++;
-                        break;
-                    }
-                    else if (pkt->isRead()){
-                        writeSequence.sample(Pws->second);
-                        wsRecord[setIdx].erase(Pws);
-                    }
-                }
-            }
+        //     for (Pws = wsRecord[setIdx].begin(); Pws != wsRecord[setIdx].end(); Pws++){
+        //         if (Pws->first == addr_block){                          //如果是read，就出栈，sample；如果是write，就+1
+        //             foundIt = true;
+        //             if(pkt->isWrite()){
+        //                 (Pws->second)++;
+        //                 break;
+        //             }
+        //             else if (pkt->isRead()){
+        //                 writeSequence.sample(Pws->second);
+        //                 wsRecord[setIdx].erase(Pws);
+        //             }
+        //         }
+        //     }
 
-            if (!foundIt)
-                wsRecord[setIdx].push_back(std::make_pair(addr_block, 0));
-        }
+        //     if (!foundIt)
+        //         wsRecord[setIdx].push_back(std::make_pair(addr_block, 0));
+        // }
 
 
-        std::list<unsigned int>::iterator Prd;
-        if(rdRecord.find(setIdx) != rdRecord.end()){                   //这里的Map_r是base.hh中的成员，先找到set
-            int reuse_distance =1;
-            for(Prd = rdRecord[setIdx].end(); Prd != rdRecord[setIdx].begin(); ){   //自底向上寻找，实际上是自新向旧寻找
-                Prd--;
-                if (*Prd == addr_block){
-                    reuseDistanceDistribution.sample(reuse_distance);
-                    //collect the RDD of swaped blocks
-                    if (blk && blk->isSwaped)
-                        swapedReuseDistanceDistribution.sample(reuse_distance);
-                    break;
-                }
-                else
-                    reuse_distance++;
-            }
-        }
-        if(rdRecord[setIdx].size()>=2048)
-            rdRecord[setIdx].erase(rdRecord[setIdx].begin());
-        rdRecord[setIdx].push_back(addr_block);
+        // std::list<unsigned int>::iterator Prd;
+        // if(rdRecord.find(setIdx) != rdRecord.end()){                   //这里的Map_r是base.hh中的成员，先找到set
+        //     int reuse_distance =1;
+        //     for(Prd = rdRecord[setIdx].end(); Prd != rdRecord[setIdx].begin(); ){   //自底向上寻找，实际上是自新向旧寻找
+        //         Prd--;
+        //         if (*Prd == addr_block){
+        //             reuseDistanceDistribution.sample(reuse_distance);
+        //             //collect the RDD of swaped blocks
+        //             if (blk && blk->isSwaped)
+        //                 swapedReuseDistanceDistribution.sample(reuse_distance);
+        //             break;
+        //         }
+        //         else
+        //             reuse_distance++;
+        //     }
+        // }
+        // if(rdRecord[setIdx].size()>=2048)
+        //     rdRecord[setIdx].erase(rdRecord[setIdx].begin());
+        // rdRecord[setIdx].push_back(addr_block);
 
         //sxj end
 
