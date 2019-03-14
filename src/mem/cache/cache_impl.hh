@@ -352,13 +352,36 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     bool isIcache = cacheName.find("icache") != std::string::npos;
     bool isL2 = cacheName.find("l2") != std::string::npos;
 
-    if (blk && (isDcache || isIcache || isL2) ) {//这里的cycle数量变化在所有的cache中均考虑了
+    if (blk && (isDcache || isIcache) ) {//这里的cycle数量变化在所有的cache中均考虑了
+        if (pkt->isRead()){
+            Addr blockOffset = pkt->getOffset(blkSize);
+            int blockAlign = blockOffset/(blkSize/4);
+            if (!blk->weakMap[blockAlign]){
+                readHitsStrong++;
+            }
+            else {
+                lat += Cycles(2);//for the additional cycle by accessing the weak cell
+                readHitsWeak++;
+            }
+        }
+        else {
+            if (!blk->weakMap[blockAlign]){
+                writeHitsStrong++;
+            }
+            else {
+                lat += Cycles(2);
+                writeHitsWeak++;
+            }
+        }
+    }
+
+    if (blk && isL2) {//这里的cycle数量变化在所有的cache中均考虑了
         if (pkt->isRead()){
             if (!blk->isWeak){
                 readHitsStrong++;
             }
             else {
-                lat += isL2 ? Cycles(5):Cycles(2);//for the additional cycle by accessing the weak cell
+                lat += Cycles(5);//for the additional cycle by accessing the weak cell
                 readHitsWeak++;
             }
         }
@@ -367,7 +390,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
                 writeHitsStrong++;
             }
             else {
-                lat += isL2 ? Cycles(5):Cycles(2);
+                lat += Cycles(5);
                 writeHitsWeak++;
             }
         }
