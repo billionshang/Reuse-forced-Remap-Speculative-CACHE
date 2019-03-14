@@ -152,7 +152,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
                 maxError--;
             }
             for(int iii = 0; iii < 4; iii++){//同样是自上而下
-                if (subblkErrorCnt[iii])
+                if (subblkErrorCnt[iii]>0)
                     blk->weakMap[iii] = true;
                 subblkErrorCnt[iii]--;
             }
