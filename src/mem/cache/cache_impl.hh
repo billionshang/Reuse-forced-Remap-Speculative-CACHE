@@ -358,7 +358,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
                 readHitsStrong++;
             }
             else {
-                lat += isL2 ? Cycle(5):Cycles(2);//for the additional cycle by accessing the weak cell
+                lat += isL2 ? Cycles(5):Cycles(2);//for the additional cycle by accessing the weak cell
                 readHitsWeak++;
             }
         }
@@ -367,7 +367,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
                 writeHitsStrong++;
             }
             else {
-                lat += isL2 ? Cycle(5):Cycles(2);
+                lat += isL2 ? Cycles(5):Cycles(2);
                 writeHitsWeak++;
             }
         }
