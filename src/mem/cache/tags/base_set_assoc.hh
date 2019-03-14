@@ -328,6 +328,12 @@ public:
         blk->isWeak = false;
         Swapblk->isWeak = true;
         blk->isSwaped = true;
+        bool tempWeakMap[4];
+        for(int i = 0; i < 4; i++){
+            tempWeakMap[i] = blk->weakMap[i];
+            blk->weakMap[i] = Swapblk->weakMap[i];
+            Swapblk->weakMap[i] = tempWeakMap[i];
+        }
     }
     //sxj end
 
