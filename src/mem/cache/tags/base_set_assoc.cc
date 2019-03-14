@@ -107,7 +107,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
             }
         }
         for (int ii = 0; ii < 4; ii++){
-            for (int jj = 1; jj < assoc; jj++){
+            for (int jj = 0; jj < assoc; jj++){
                 subblkErrorCnt[ii] += subblk[jj][ii];//used for countting the error subblock in one subset
             }
         }
