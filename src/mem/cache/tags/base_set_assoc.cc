@@ -95,7 +95,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
         //sxj
         int subblk[assoc][4];
         int subblkError = 0; 
-        int subblkErrorCnt[4];
+        int subblkErrorCnt[4] = {0, 0, 0, 0};
         //在这里进行map的生成，已有参数：assoc，subError = 0.12
         for (int ii = 0; ii < assoc; ii++){
             for (int jj = 0; jj < 4; jj++){
