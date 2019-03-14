@@ -148,6 +148,11 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
                 blk->isWeak = true;
                 maxError--;
             }
+            for(int iii = 0; iii < 4; iii++){
+                if (subblkErrorCnt[iii])
+                    blk->weakMap[iii] = true;
+                subblkError[iii]--;
+            }
 
             //sxj end
             blk->isTouched = false;
