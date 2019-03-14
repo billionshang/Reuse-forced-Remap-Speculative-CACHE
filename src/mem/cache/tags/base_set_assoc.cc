@@ -95,6 +95,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
         //sxj
         int subblk[assoc][4];
         int subblkError = 0; 
+        int subblkErrorCnt[4];
         //在这里进行map的生成，已有参数：assoc，subError = 0.12
         for (int ii = 0; ii < assoc; ii++){
             for (int jj = 0; jj < 4; jj++){
@@ -107,13 +108,13 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
         }
         for (int ii = 0; ii < 4; ii++){
             for (int jj = 1; jj < assoc; jj++){
-                subblk[0][ii] += subblk[jj][ii];//used for countting the error subblock in one subset
+                subblkErrorCnt[ii] += subblk[jj][ii];//used for countting the error subblock in one subset
             }
         }
         int maxError = 0;
         for (int ii = 0; ii < 4; ii++){
-            if (maxError < subblk[0][ii])
-                maxError = subblk[0][ii];
+            if (maxError < subblkErrorCnt[ii])
+                maxError = subblkErrorCnt[ii];
         }
 
         //sxj end
@@ -135,18 +136,19 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
             blk->tag = j;
             blk->whenReady = 0;
             //sxj
-            bool blkError = subblk[j][0] || subblk[j][1] || subblk[j][2] || subblk[j][3];
-            for(int iii = 0; iii < 4; iii++){
-                blk->weakMap[iii] = subblk[j][iii];//saving the weak map, only using for L1
-            }
-            if (blkError){
+            // bool blkError = subblk[j][0] || subblk[j][1] || subblk[j][2] || subblk[j][3];
+            // for(int iii = 0; iii < 4; iii++){
+            //     blk->weakMap[iii] = subblk[j][iii];//saving the weak map, only using for L1
+            // }
+            // if (blkError){
+            //     blk->isWeak = true;
+            // }
+
+            if (maxError){
                 blk->isWeak = true;
+                maxError--;
             }
 
-            // if (maxError){
-            //     blk->isWeak = true;
-            //     maxError--;
-            // }
             //sxj end
             blk->isTouched = false;
             blk->size = blkSize;
