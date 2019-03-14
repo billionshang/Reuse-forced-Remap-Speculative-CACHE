@@ -136,23 +136,25 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
             blk->tag = j;
             blk->whenReady = 0;
             //sxj
-            // bool blkError = subblk[j][0] || subblk[j][1] || subblk[j][2] || subblk[j][3];
-            // for(int iii = 0; iii < 4; iii++){
-            //     blk->weakMap[iii] = subblk[j][iii];//saving the weak map, only using for L1
-            // }
-            // if (blkError){
-            //     blk->isWeak = true;
-            // }
-
-            if (maxError){
-                blk->isWeak = true;
-                maxError--;
-            }
+            //for ssram
+            bool blkError = subblk[j][0] || subblk[j][1] || subblk[j][2] || subblk[j][3];
             for(int iii = 0; iii < 4; iii++){
-                if (subblkErrorCnt[iii])
-                    blk->weakMap[iii] = true;
-                subblkError[iii]--;
+                blk->weakMap[iii] = subblk[j][iii];//saving the weak map, only using for L1
             }
+            if (blkError){
+                blk->isWeak = true;
+            }
+
+            //for remap
+            // if (maxError){
+            //     blk->isWeak = true;
+            //     maxError--;
+            // }
+            // for(int iii = 0; iii < 4; iii++){
+            //     if (subblkErrorCnt[iii])
+            //         blk->weakMap[iii] = true;
+            //     subblkErrorCnt[iii]--;
+            // }
 
             //sxj end
             blk->isTouched = false;
