@@ -95,7 +95,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
         //sxj
         int subblk[assoc][4];
         int subblkError = 0; 
-        int subblkErrorCnt[4];
+        int subblkErrorCnt[4];//用于存储每个替换组内出错的subblock的个数
         //在这里进行map的生成，已有参数：assoc，subError = 0.12
         for (int ii = 0; ii < assoc; ii++){
             for (int jj = 0; jj < 4; jj++){
@@ -111,7 +111,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
                 subblkErrorCnt[ii] += subblk[jj][ii];//used for countting the error subblock in one subset
             }
         }
-        int maxError = 0;
+        int maxError = 0;//用于记录所有替换组中的最大出错数量
         for (int ii = 0; ii < 4; ii++){
             if (maxError < subblkErrorCnt[ii])
                 maxError = subblkErrorCnt[ii];
@@ -146,11 +146,11 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
             // }
 
             //for remap
-            if (maxError){
+            if (maxError){//自上而下布置weak
                 blk->isWeak = true;
                 maxError--;
             }
-            for(int iii = 0; iii < 4; iii++){
+            for(int iii = 0; iii < 4; iii++){//同样是自上而下
                 if (subblkErrorCnt[iii])
                     blk->weakMap[iii] = true;
                 subblkErrorCnt[iii]--;
