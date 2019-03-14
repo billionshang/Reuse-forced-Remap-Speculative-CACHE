@@ -347,13 +347,18 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     std::string cacheName(name());
     //printf("packet's size = %d\n", pkt->getSize());
     packetSize.sample(pkt->getSize());
-    if (blk && ((cacheName.find("dcache") != std::string::npos) || (cacheName.find("icache") != std::string::npos)) ) {//这里的cycle数量变化在所有的cache中均考虑了
+
+    bool isDcache = cacheName.find("dcache") != std::string::npos;
+    bool isIcache = cacheName.find("icache") != std::string::npos;
+    bool isL2 = cacheName.find("l2") != std::string::npos;
+
+    if (blk && (isDcache || isIcache || isL2) ) {//这里的cycle数量变化在所有的cache中均考虑了
         if (pkt->isRead()){
             if (!blk->isWeak){
                 readHitsStrong++;
             }
             else {
-                lat += Cycles(2);//for the additional cycle by accessing the weak cell
+                lat += isL2 ? Cycle(5) ; Cycles(2);//for the additional cycle by accessing the weak cell
                 readHitsWeak++;
             }
         }
@@ -362,37 +367,38 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
                 writeHitsStrong++;
             }
             else {
-                lat += Cycles(2);
+                lat += isL2 ? Cycle(5) ; Cycles(2);;
                 writeHitsWeak++;
             }
         }
     }
     //这里检测是否要进行swap，先检测accessBlk是否命中，命中后检测操作为读还是写
-    
-    if (blk && ((cacheName.find("dcache") != std::string::npos) || (cacheName.find("icache") != std::string::npos)) ) {//hit
-        /*printf("come from ");
-        if (name() == "system.cpu.dcache")
-            printf("D cache\n");
-        else
-            printf("L2 cache\n");*/
+    int tempPktSize = pkt->getSize();
+    if (blk && (isDcache || isIcache) && (tempPktSize < 64)) {//hit
         if (pkt->isRead()){
-            if (blk->isWeak){
-                //printf("there is a read hit weak.\n");
+            Addr blockOffset = pkt->getOffset(blkSize);
+            int blockAlign = blockOffset/(blkSize/4);
+            if (blk->weakMap[blockAlign]){//L1的判断方法需要更改：
                 CacheBlk* Swapblk = NULL;
                 //Swapblk = tags->findVictimSwap(pkt->getAddr());
                 if (Swapblk){//找到了可以进行swap的weak存储单元
                     tags->blockSwap(blk, Swapblk, lat);//将block进行交换
                     lat += Cycles(2);
                     blockSwaps++;
-                    //printf("doing a block swap, and the new block is a ");
-                    //if (!blk->isWeak)
-                        //printf("strong one.\n");
-                    //else
-                        //printf("still weak one??\n");
                 }
-                //else {
-                    //printf("there is no strong block in this set!\n");
-                //}
+            }
+        }
+        blk->isReused = true;
+    }else if (blk) {//hit
+        if (pkt->isRead()){
+            if (blk->isWeak){
+                CacheBlk* Swapblk = NULL;
+                //Swapblk = tags->findVictimSwap(pkt->getAddr());
+                if (Swapblk){//找到了可以进行swap的weak存储单元
+                    tags->blockSwap(blk, Swapblk, lat);//将block进行交换
+                    lat += Cycles(5);
+                    blockSwaps++;
+                }
             }
         }
         blk->isReused = true;

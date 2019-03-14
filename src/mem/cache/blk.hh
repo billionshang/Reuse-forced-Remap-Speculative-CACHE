@@ -126,6 +126,8 @@ class CacheBlk
     bool isReused;
     /** whether the block has been swaped*/
     bool isSwaped;
+
+    bool weakMap[4];
     //sxj end
 
     /** whether this block has been touched */
@@ -187,7 +189,11 @@ class CacheBlk
           set(-1), isWeak(false), isW(false), isR(false), isReused(false), isSwaped(false), isTouched(false), refCount(0),//sxj
           srcMasterId(Request::invldMasterId),
           tickInserted(0)
-    {}
+    {
+        for(int i = 0; i < 4; i++){
+            weakMap[i] = false;//init the weakMap,using for L1 cache
+        }
+    }
 
     /**
      * Copy the state of the given block into this one.
