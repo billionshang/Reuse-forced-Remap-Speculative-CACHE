@@ -162,9 +162,9 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
             blk->size = blkSize;
             sets[i].blks[j]=blk;
             blk->set = i;
-            printf("way%d: %d  %d  %d  %d  isWeak: %d\n", j, blk->weakMap[0], blk->weakMap[1], blk->weakMap[2], blk->weakMap[3], blk->isWeak);
+            //printf("way%d: %d  %d  %d  %d  isWeak: %d\n", j, blk->weakMap[0], blk->weakMap[1], blk->weakMap[2], blk->weakMap[3], blk->isWeak);
         }
-        printf("  \n");
+        //printf("  \n");
     }
 }
 
