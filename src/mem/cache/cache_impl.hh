@@ -356,7 +356,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
         if (pkt->isRead()){
             Addr blockOffset = pkt->getOffset(blkSize);
             int blockAlign = blockOffset/(blkSize/4);
-            if (!blk->weakMap[blockAlign]){
+            if ( !(blk->weakMap[blockAlign]) ){
                 readHitsStrong++;
             }
             else {
@@ -365,7 +365,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
             }
         }
         else {
-            if (!blk->weakMap[blockAlign]){
+            if ( !(blk->weakMap[blockAlign]) ){
                 writeHitsStrong++;
             }
             else {
