@@ -95,7 +95,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
         //sxj
         int subblk[assoc][4];
         int subblkError = 0; 
-        int subblkErrorCnt[4];//用于存储每个替换组内出错的subblock的个数
+        int subblkErrorCnt[4] = {0, 0, 0, 0};//用于存储每个替换组内出错的subblock的个数
         //在这里进行map的生成，已有参数：assoc，subError = 0.12
         for (int ii = 0; ii < assoc; ii++){
             for (int jj = 0; jj < 4; jj++){
@@ -106,6 +106,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
                     subblk[ii][jj] = 0;
             }
         }
+        //这里记录每个替换组的最大weak数量
         for (int ii = 0; ii < 4; ii++){
             for (int jj = 0; jj < assoc; jj++){
                 subblkErrorCnt[ii] += subblk[jj][ii];//used for countting the error subblock in one subset
