@@ -296,10 +296,10 @@ public:
         BlkType *blk = NULL;
         int set = extractSet(addr);
         //printf("set %d:(assoc = %d)\n", set, assoc);
-        for (int i = assoc-1; i >= 0; --i) {
+        for (int i = 0; i <= assoc-1; ++i) {
             //printf("%dth: ", i);
             if (sets[set].blks[i]){
-                if (!(sets[set].blks[i])->isWeak) {//从LRU位置向前进行查询
+                if (!(sets[set].blks[i])->isWeak) {//从MRU位置向前进行查询
                     //printf("strong ");
                     blk = sets[set].blks[i];
                     break;
