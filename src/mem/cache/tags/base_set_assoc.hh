@@ -349,6 +349,8 @@ public:
         //这里需要交换的对象实际上只有Weak，注意LRU关系，blk处于MRU
         blk->isWeak = false;
         Swapblk->isWeak = true;
+        blk->isWeakL1 = false;
+        Swapblk->isWeakL1 = true;
         blk->isSwaped = true;
         bool tempWeakMap[4];
         for(int i = 0; i < 4; i++){
