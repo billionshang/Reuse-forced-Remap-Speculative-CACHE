@@ -217,6 +217,8 @@ class BaseTags : public ClockedObject
 
     virtual CacheBlk* findVictimSwap(Addr addr){return NULL;}//sxj
 
+    virtual CacheBlk* findVictimSwapL1(Addr addr){return NULL;}//sxj
+
     virtual void blockSwap(CacheBlk *blk, CacheBlk *Swapblk, Cycles &lat){}//sxj
 
     virtual int extractSet(Addr addr) const = 0;

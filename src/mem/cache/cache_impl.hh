@@ -416,7 +416,12 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
         if (pkt->isRead()){
             if (blk->isWeak){
                 CacheBlk* Swapblk = NULL;
-                Swapblk = tags->findVictimSwap(pkt->getAddr());
+                if (isDcache || isIcache){
+                    Swapblk = tags->findVictimSwapL1(pkt->getAddr());
+                }
+                else{
+                    Swapblk = tags->findVictimSwap(pkt->getAddr());
+                }
                 if (Swapblk){//找到了可以进行swap的weak存储单元
                     tags->blockSwap(blk, Swapblk, lat);//将block进行交换
                     lat += Cycles(5);

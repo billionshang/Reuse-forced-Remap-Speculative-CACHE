@@ -314,6 +314,28 @@ public:
         return blk;
     }
 
+    CacheBlk* findVictimSwapL1(Addr addr){//本函数的目的在于寻找一个替换的对象
+        BlkType *blk = NULL;
+        int set = extractSet(addr);
+        //printf("set %d:(assoc = %d)\n", set, assoc);
+        for (int i = assoc-1; i >= 0; --i) {
+            //printf("%dth: ", i);
+            if (sets[set].blks[i]){
+                if (!(sets[set].blks[i])->isWeakL1) {//从LRU位置向前进行查询
+                    //printf("strong ");
+                    blk = sets[set].blks[i];
+                    break;
+                }
+                //else
+                    //printf("weak ");
+            }
+            //else
+                //printf("sets[set].blks[i] is NULL!\n");
+        }
+        //printf("\n");
+        return blk;
+    }
+
     void blockSwap(CacheBlk *blk, CacheBlk *Swapblk, Cycles &lat){
         /*if (Swapblk != NULL) {
             if (Swapblk->whenReady > curTick()
