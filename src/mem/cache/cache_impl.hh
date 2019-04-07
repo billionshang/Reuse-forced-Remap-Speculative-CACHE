@@ -353,6 +353,7 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     bool isL2 = cacheName.find("l2") != std::string::npos;
 
     if (blk && (isDcache || isIcache) ) {//这里的cycle数量变化在所有的cache中均考虑了
+        //最好L1本身不进行重映射
         Addr blockOffset = pkt->getOffset(blkSize);
         int blockAlign = blockOffset/(blkSize/4);
         if (pkt->isRead()){
