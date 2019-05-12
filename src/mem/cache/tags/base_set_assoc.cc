@@ -46,6 +46,7 @@
  */
 
 #include <string>
+#include <iostream>
 
 #include "base/intmath.hh"
 #include "mem/cache/tags/base_set_assoc.hh"
@@ -72,6 +73,8 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
     //sxj
     //srand(2);
     //sxj end
+    ofstream outputFile;//sxj
+    outputFile.open("weak_distribution.txt", iostream::app);//sxj
 
     blkMask = blkSize - 1;
     setShift = floorLog2(blkSize);
@@ -93,6 +96,7 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
         sets[i].blks = new BlkType*[assoc];
 
         //sxj
+        outputFile << "set: " << i << endl;
         int subblk[assoc][4];
         int subblkError = 0; 
         int subblkErrorCnt[4] = {0, 0, 0, 0};//用于存储每个替换组内出错的subblock的个数
