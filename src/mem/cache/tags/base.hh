@@ -108,6 +108,10 @@ class BaseTags : public ClockedObject
 
     //sxj
     Stats::SparseHistogram setAccess;
+
+    Stats::SparseHistogram RAccessInSet;
+
+    Stats::SparseHistogram weakRAccessInSet;
     //sxj end
 
     /**

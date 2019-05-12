@@ -352,17 +352,22 @@ Cache::access(PacketPtr pkt, CacheBlk *&blk, Cycles &lat,
     bool isIcache = cacheName.find("icache") != std::string::npos;
     bool isL2 = cacheName.find("l2") != std::string::npos;
 
+    Addr addressTemp = pkt->getAddr();
+    int setTemp = extractSet(addressTemp);
+
     if (blk && (isDcache || isIcache) ) {//这里的cycle数量变化在所有的cache中均考虑了
         //最好L1本身不进行重映射
         Addr blockOffset = pkt->getOffset(blkSize);
         int blockAlign = blockOffset/(blkSize/4);
         if (pkt->isRead()){
+            tags->RAccessInSet.sample(setTemp);
             if ( !(blk->weakMap[blockAlign]) ){
                 readHitsStrong++;
             }
             else {
                 lat += Cycles(2);//for the additional cycle by accessing the weak cell
                 readHitsWeak++;
+                tags->weakRAccessInSet.sample(setTemp);
             }
         }
         else {

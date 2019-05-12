@@ -82,7 +82,20 @@ BaseTags::regStats()
     setAccess
         .name(name()+".set_access")
         .init(0)
-        .desc("number of accesses for each sets")
+        .desc("number of accesses for each set")
+        ;
+
+    RAccessInSet
+        .name(name()+".read_access_set")
+        .init(0)
+        .desc("number of reading accesses in each set")
+        ;
+
+
+    weakRAccessInSet
+        .name(name()+".weak_Raccess_set")
+        .init(0)
+        .desc("number of weak reading accesses in each set")
         ;
     //sxj end
 
