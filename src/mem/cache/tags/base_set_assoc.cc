@@ -140,9 +140,9 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
             //for ssram
             // bool blkError = subblk[j][0] || subblk[j][1] || subblk[j][2] || subblk[j][3];
             //用于针对L1不使用remap，但是L2依旧使用remap
-            for(int iii = 0; iii < 4; iii++){
-                 blk->weakMap[iii] = subblk[j][iii];//saving the weak map, only using for L1
-            }
+            // for(int iii = 0; iii < 4; iii++){
+            //      blk->weakMap[iii] = subblk[j][iii];//saving the weak map, only using for L1
+            // }
             // if (blkError){
             //     blk->isWeak = true;
             // }
@@ -152,11 +152,11 @@ BaseSetAssoc::BaseSetAssoc(const Params *p) //初始化过程所使用的函数
                 blk->isWeak = true;//isWeak标志位仅仅针对L2有用
                 maxError--;
             }
-            // for(int iii = 0; iii < 4; iii++){//同样是自上而下
-            //     if (subblkErrorCnt[iii]>0)
-            //         blk->weakMap[iii] = true;
-            //     subblkErrorCnt[iii]--;
-            // }
+            for(int iii = 0; iii < 4; iii++){//同样是自上而下
+                if (subblkErrorCnt[iii]>0)
+                    blk->weakMap[iii] = true;
+                subblkErrorCnt[iii]--;
+            }
 
             //sxj end
             blk->isTouched = false;
