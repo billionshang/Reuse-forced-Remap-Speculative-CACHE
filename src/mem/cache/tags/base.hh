@@ -109,9 +109,7 @@ class BaseTags : public ClockedObject
     //sxj
     Stats::SparseHistogram setAccess;
 
-    Stats::SparseHistogram RAccessInSet;
 
-    Stats::SparseHistogram weakRAccessInSet;
     //sxj end
 
     /**
@@ -148,6 +146,12 @@ class BaseTags : public ClockedObject
      */
 
   public:
+    //sxj
+    Stats::SparseHistogram RAccessInSet;
+
+    Stats::SparseHistogram weakRAccessInSet;
+    //sxj end
+    
     typedef BaseTagsParams Params;
     BaseTags(const Params *p);
 
