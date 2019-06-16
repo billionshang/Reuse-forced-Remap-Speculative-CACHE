@@ -650,7 +650,7 @@ Cache::recvTimingReq(PacketPtr pkt)
         //sxj
 
         unsigned int addr_block = blockAlign(pkt->getAddr());   
-        bool foundIt = false;
+        //bool foundIt = false;
         int setIdx = tags->extractSet(pkt->getAddr());          //首先获得pkt对应的block地址以及tag地址
         // std::list<std::pair<unsigned int, unsigned int> >::iterator Pws;
         // if (wsRecord.find(setIdx) != wsRecord.end()){                   //这里的wsRecord是base.hh中的成员，先找到set
