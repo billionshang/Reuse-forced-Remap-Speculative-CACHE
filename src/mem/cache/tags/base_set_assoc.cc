@@ -47,6 +47,7 @@
 
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include "base/intmath.hh"
 #include "mem/cache/tags/base_set_assoc.hh"
