@@ -227,6 +227,11 @@ BaseCache::regStats()
         .init(0)
         .desc("RDD")
         ;
+    stackDistanceDistribution
+        .name(name()+".stack_distance_distribution")
+        .init(0)
+        .desc("SDD")
+        ;
     swapedReuseDistanceDistribution
         .name(name()+".swaped_reuse_distance_distribution")
         .init(0)

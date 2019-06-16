@@ -649,9 +649,9 @@ Cache::recvTimingReq(PacketPtr pkt)
 
         //sxj
 
-        // unsigned int addr_block = blockAlign(pkt->getAddr());   
-        // bool foundIt = false;
-        // int setIdx = tags->extractSet(pkt->getAddr());          //首先获得pkt对应的block地址以及tag地址
+        unsigned int addr_block = blockAlign(pkt->getAddr());   
+        bool foundIt = false;
+        int setIdx = tags->extractSet(pkt->getAddr());          //首先获得pkt对应的block地址以及tag地址
         // std::list<std::pair<unsigned int, unsigned int> >::iterator Pws;
         // if (wsRecord.find(setIdx) != wsRecord.end()){                   //这里的wsRecord是base.hh中的成员，先找到set
 
@@ -674,25 +674,44 @@ Cache::recvTimingReq(PacketPtr pkt)
         // }
 
 
-        // std::list<unsigned int>::iterator Prd;
-        // if(rdRecord.find(setIdx) != rdRecord.end()){                   //这里的Map_r是base.hh中的成员，先找到set
-        //     int reuse_distance =1;
-        //     for(Prd = rdRecord[setIdx].end(); Prd != rdRecord[setIdx].begin(); ){   //自底向上寻找，实际上是自新向旧寻找
-        //         Prd--;
-        //         if (*Prd == addr_block){
-        //             reuseDistanceDistribution.sample(reuse_distance);
-        //             //collect the RDD of swaped blocks
-        //             if (blk && blk->isSwaped)
-        //                 swapedReuseDistanceDistribution.sample(reuse_distance);
-        //             break;
-        //         }
-        //         else
-        //             reuse_distance++;
-        //     }
-        // }
-        // if(rdRecord[setIdx].size()>=2048)
-        //     rdRecord[setIdx].erase(rdRecord[setIdx].begin());
-        // rdRecord[setIdx].push_back(addr_block);
+        std::list<unsigned int>::iterator Prd;
+        if(rdRecord.find(setIdx) != rdRecord.end()){                   //这里的Map_r是base.hh中的成员，先找到set
+            int reuse_distance =1;
+            for(Prd = rdRecord[setIdx].end(); Prd != rdRecord[setIdx].begin(); ){   //自底向上寻找，实际上是自新向旧寻找
+                Prd--;
+                if (*Prd == addr_block){
+                    reuseDistanceDistribution.sample(reuse_distance);
+                    //collect the RDD of swaped blocks
+                    if (blk && blk->isSwaped)
+                        swapedReuseDistanceDistribution.sample(reuse_distance);
+                    break;
+                }
+                else
+                    reuse_distance++;
+            }
+        }
+        if(rdRecord[setIdx].size()>=2048)
+            rdRecord[setIdx].erase(rdRecord[setIdx].begin());
+        rdRecord[setIdx].push_back(addr_block);
+
+        std::list<unsigned int>::iterator Psd;
+        if(sdRecord.find(setIdx) != sdRecord.end()){                   //这里的Map_r是base.hh中的成员，先找到set
+            int stack_distance =1;
+            for(Psd = sdRecord[setIdx].end(); Psd != sdRecord[setIdx].begin(); ){   //自底向上寻找，实际上是自新向旧寻找
+                Psd--;
+                if (*Psd == addr_block){
+                    stackDistanceDistribution.sample(stack_distance);
+                    sdRecord[setIdx].erase(Psd);
+                    //collect the RDD of swaped blocks
+                    break;
+                }
+                else
+                    stack_distance++;
+            }
+        }
+        if(sdRecord[setIdx].size()>=2048)
+            sdRecord[setIdx].erase(sdRecord[setIdx].begin());
+        sdRecord[setIdx].push_back(addr_block);
 
         //sxj end
 

@@ -111,6 +111,7 @@ class BaseCache : public MemObject
     std::map<int, std::list<std::pair<unsigned int, unsigned int> > > wsRecord;
     //std::map<int, std::list<unsigned int> > wsNumber;
     std::map<int, std::list<unsigned int> > rdRecord;
+    std::map<int, std::list<unsigned int> > sdRecord;
     //sxj end
   protected:
 
@@ -364,6 +365,7 @@ class BaseCache : public MemObject
     /** RDD. */
     Stats::SparseHistogram reuseDistanceDistribution;
     /** RDD of Swaped blocks. */
+    Stats::SparseHistogram stackDistanceDistribution;
     Stats::SparseHistogram swapedReuseDistanceDistribution;
     /** collect the hit latency **/
     Stats::Scalar hitLatencyAll;
